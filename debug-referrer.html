@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>来源网站检测测试</title>
+    <link rel="stylesheet" href="music.css">
+</head>
+<body>
+    <h1>来源网站检测测试</h1>
+    
+    <p>这个页面用于测试音乐播放器的来源网站检测功能。</p>
+    
+    <h2>测试方法：</h2>
+    <ol>
+        <li>直接访问此页面 - 应该显示"直接访问"</li>
+        <li>从其他网站点击链接进入 - 应该检测到来源网站</li>
+        <li>从搜索引擎进入 - 应该检测为"search"类型</li>
+        <li>从社交媒体进入 - 应该检测为"social"类型</li>
+    </ol>
+    
+    <h2>播放器：</h2>
+    <div 
+        class="netease-mini-player" 
+        data-autoplay="true"
+        data-music-file="audio/demo.mp3"
+        data-lyric-file="audio/demo.lrc"
+        data-position="static"
+    ></div>
+    
+    <h2>检测到的来源信息：</h2>
+    <div id="referrer-info">
+        <p>请打开浏览器控制台查看详细的来源检测信息。</p>
+    </div>
+    
+    <script>
+        // 显示来源信息
+        function displayReferrerInfo() {
+            const info = window.NeteasePlayerReferrer;
+            if (info) {
+                const infoDiv = document.getElementById('referrer-info');
+                infoDiv.innerHTML = `
+                    <h3>来源网站信息：</h3>
+                    <ul>
+                        <li>有来源: ${info.hasReferrer}</li>
+                        <li>是否外部: ${info.isExternal}</li>
+                        <li>域名: ${info.domain || '无'}</li>
+                        <li>类型: ${info.type}</li>
+                        <li>URL: ${info.url || '无'}</li>
+                    </ul>
+                `;
+            }
+        }
+        
+        // 等待播放器初始化完成
+        setTimeout(displayReferrerInfo, 2000);
+    </script>
+    
+    <script src="music.js"></script>
+</body>
+</html>

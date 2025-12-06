@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>纯音频测试</title>
+    <style>
+        body { 
+            background: #f5f5f5; 
+            font-family: Arial; 
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .audio-controls {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .btn:hover {
+            background: #0056b3;
+        }
+        
+        .btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        
+        .info {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        
+        .progress-info {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 10px;
+            align-items: center;
+            margin: 10px 0;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+        }
+        
+        .time-display {
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h2>🎵 纯音频播放测试</h2>
+        <p>这个页面测试标准的HTML5 Audio API，用于验证音频文件是否可以正常播放和跳转。</p>
+        
+        <audio id="testAudio" controls style="width: 100%; margin: 15px 0;">
+            <source src="audio/岸边客 (心碎版0.9x)-夏子航（2603）.mp3" type="audio/mpeg">
+            您的浏览器不支持音频播放。
+        </audio>
+        
+        <div class="audio-controls">
+            <button class="btn" id="playBtn">播放</button>
+            <button class="btn" id="pauseBtn">暂停</button>
+            <button class="btn" id="seek10Btn">跳转到10秒</button>
+            <button class="btn" id="seek30Btn">跳转到30秒</button>
+            <button class="btn" id="testProgressBtn">测试进度更新</button>
+        </div>
+        
+        <div class="progress-info">
+            <div class="time-display" id="currentTime">0:00</div>
+            <input type="range" id="progressBar" min="0" max="100" value="0" step="0.1">
+            <div class="time-display" id="duration">0:00</div>
+        </div>
+        
+        <div class="info" id="debugInfo">
+            初始化中...
+        </div>
+    </div>
+
+    <script>
+        const audio = document.getElementById('testAudio');
+        const playBtn = document.getElementById('playBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const seek10Btn = document.getElementById('seek10Btn');
+        const seek30Btn = document.getElementById('seek30Btn');
+        const testProgressBtn = document.getElementById('testProgressBtn');
+        const progressBar = document.getElementById('progressBar');
+        const currentTimeDisplay = document.getElementById('currentTime');
+        const durationDisplay = document.getElementById('duration');
+        const debugInfo = document.getElementById('debugInfo');
+        
+        let updateInterval = null;
+        
+        function formatTime(seconds) {
+            if (!seconds || isNaN(seconds)) return '0:00';
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${minutes}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        function updateDisplay() {
+            currentTimeDisplay.textContent = formatTime(audio.currentTime);
+            durationDisplay.textContent = formatTime(audio.duration);
+            
+            if (audio.duration && !isNaN(audio.duration)) {
+                const progress = (audio.currentTime / audio.duration) * 100;
+                progressBar.value = progress;
+                progressBar.max = 100;
+            }
+        }
+        
+        function updateDebugInfo() {
+            const info = `
+🎵 音频元素状态:
+▶️ 播放状态: ${audio.paused ? '暂停' : '播放中'}
+⏱️ 当前时间: ${audio.currentTime.toFixed(2)}s
+⏱️ 总时长: ${audio.duration ? audio.duration.toFixed(2) + 's' : '未知'}
+📊 进度: ${audio.duration ? ((audio.currentTime / audio.duration) * 100).toFixed(1) + '%' : '未知'}
+🌐 网络状态: ${audio.networkState}/4
+📊 就绪状态: ${audio.readyState}/4
+🔊 音量: ${(audio.volume * 100).toFixed(0)}%
+⏩ 播放速率: ${audio.playbackRate}x
+🔗 音频源: ${audio.src ? audio.src.substring(0, 80) + '...' : '未设置'}
+❌ 错误: ${audio.error ? audio.error.message : '无'}
+            `;
+            debugInfo.innerHTML = info.replace(/\n/g, '<br>');
+        }
+        
+        // 事件监听器
+        playBtn.addEventListener('click', () => {
+            audio.play().then(() => {
+                console.log('播放成功');
+            }).catch(err => {
+                console.error('播放失败:', err);
+            });
+        });
+        
+        pauseBtn.addEventListener('click', () => {
+            audio.pause();
+        });
+        
+        seek10Btn.addEventListener('click', () => {
+            if (audio.duration) {
+                audio.currentTime = 10;
+                console.log('跳转到10秒');
+            }
+        });
+        
+        seek30Btn.addEventListener('click', () => {
+            if (audio.duration) {
+                audio.currentTime = 30;
+                console.log('跳转到30秒');
+            }
+        });
+        
+        testProgressBtn.addEventListener('click', () => {
+            // 测试连续进度更新
+            let startTime = Date.now();
+            const testInterval = setInterval(() => {
+                const elapsed = (Date.now() - startTime) / 1000;
+                if (elapsed >= 5) {
+                    clearInterval(testInterval);
+                    console.log('进度测试完成');
+                    return;
+                }
+                console.log(`测试进度 ${elapsed.toFixed(1)}s: ${audio.currentTime.toFixed(2)}s`);
+            }, 500);
+        });
+        
+        progressBar.addEventListener('input', (e) => {
+            if (audio.duration) {
+                const percent = e.target.value / 100;
+                audio.currentTime = percent * audio.duration;
+            }
+        });
+        
+        // 音频事件监听器
+        audio.addEventListener('loadedmetadata', () => {
+            console.log('✅ 元数据加载完成');
+            updateDisplay();
+            updateDebugInfo();
+        });
+        
+        audio.addEventListener('timeupdate', () => {
+            updateDisplay();
+        });
+        
+        audio.addEventListener('canplay', () => {
+            console.log('✅ 音频可以播放');
+            updateDebugInfo();
+        });
+        
+        audio.addEventListener('play', () => {
+            console.log('▶️ 开始播放');
+            updateDebugInfo();
+        });
+        
+        audio.addEventListener('pause', () => {
+            console.log('⏸️ 暂停播放');
+            updateDebugInfo();
+        });
+        
+        audio.addEventListener('seeked', () => {
+            console.log('🎯 跳转完成，当前时间:', audio.currentTime.toFixed(2) + 's');
+            updateDebugInfo();
+        });
+        
+        audio.addEventListener('error', (e) => {
+            console.error('❌ 音频错误:', e);
+            updateDebugInfo();
+        });
+        
+        // 初始化
+        setTimeout(() => {
+            updateDisplay();
+            updateDebugInfo();
+            
+            // 每秒更新一次调试信息
+            updateInterval = setInterval(() => {
+                updateDebugInfo();
+            }, 1000);
+        }, 500);
+        
+        // 清理
+        window.addEventListener('beforeunload', () => {
+            if (updateInterval) {
+                clearInterval(updateInterval);
+            }
+        });
+    </script>
+</body>
+</html>

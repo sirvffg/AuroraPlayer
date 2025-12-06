@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>本地音乐播放器示例</title>
+
+    <!-- 播放器样式文件（可选，如果你有） -->
+    <link rel="stylesheet" href="music.css?v=2.1.0">
+</head>
+
+<body style="background:#fafafa; font-family:Arial;">
+
+    <h1>本地音乐播放器示例</h1>
+
+    <!-- 标准模式播放器 -->
+    <h3>标准模式</h3>
+    <div class="netease-mini-player"
+        data-music-file="audio/岸边客 (心碎版0.9x)-夏子航（2603）.mp3"
+        data-lyric-file="audio/岸边客 (心碎版0.9x)-夏子航（2603）.lrc"
+        data-autoplay="true"
+        data-position="static"
+        data-theme="auto"
+        data-size="normal">
+    </div>
+
+    <br><br>
+
+    <!-- 圆盘模式播放器 -->
+    <h3>圆盘模式（黑胶唱片风格）</h3>
+    <div class="netease-mini-player"
+        data-music-file="audio/岸边客 (心碎版0.9x)-夏子航（2603）.mp3"
+        data-lyric-file="audio/岸边客 (心碎版0.9x)-夏子航（2603）.lrc"
+        data-autoplay="false"
+        data-position="static"
+        data-theme="auto"
+        data-size="normal"
+        data-cover-mode="true">
+    </div>
+
+    <br><br>
+
+    <!-- 自定义封面播放器 -->
+    <h3>自定义封面</h3>
+    <div class="netease-mini-player"
+        data-music-file="audio/岸边客 (心碎版0.9x)-夏子航（2603）.mp3"
+        data-lyric-file="audio/岸边客 (心碎版0.9x)-夏子航（2603）.lrc"
+        data-autoplay="false"
+        data-position="static"
+        data-theme="auto"
+        data-size="normal"
+        data-cover-url="https://picsum.photos/seed/music-cover/300/300.jpg">
+    </div>
+
+    <br><br>
+
+    <!-- 圆盘模式 + 自定义封面 -->
+    <h3>圆盘模式 + 自定义封面</h3>
+    <div class="netease-mini-player"
+        data-music-file="audio/岸边客 (心碎版0.9x)-夏子航（2603）.mp3"
+        data-lyric-file="audio/岸边客 (心碎版0.9x)-夏子航（2603）.lrc"
+        data-autoplay="false"
+        data-position="static"
+        data-theme="auto"
+        data-size="normal"
+        data-cover-mode="true"
+        data-cover-url="https://picsum.photos/seed/vinyl-cover/300/300.jpg">
+    </div>
+
+    <br><br>
+
+    <!-- 可最小化播放器 -->
+    <h3>可最小化播放器（固定在右下角）</h3>
+    <div class="netease-mini-player"
+        data-music-file="audio/岸边客 (心碎版0.9x)-夏子航（2603）.mp3"
+        data-lyric-file="audio/岸边客 (心碎版0.9x)-夏子航（2603）.lrc"
+        data-autoplay="false"
+        data-position="bottom-right"
+        data-theme="auto"
+        data-size="normal"
+        data-cover-mode="true">
+    </div>
+
+    <br><br>
+
+    <!-- 嵌入模式播放器（适合 iframe 或小区域） -->
+    <h3>嵌入模式（隐藏切歌、列表按钮）</h3>
+    <div class="netease-mini-player"
+        data-music-file="audio/岸边客 (心碎版0.9x)-夏子航（2603）.mp3"
+        data-lyric-file="audio/岸边客 (心碎版0.9x)-夏子航（2603）.lrc"
+        data-autoplay="false"
+        data-position="static"
+        data-theme="auto"
+        data-size="normal"
+        data-embed="true">
+    </div>
+
+
+    <!-- 嵌入模式播放器（适合 iframe 或小区域） -->
+    <h3>嵌入模式 + 圆盘模式 + 随机封面</h3>
+    
+    <div class="netease-mini-player"
+        data-music-file="audio/岸边客 (心碎版0.9x)-夏子航（2603）.mp3"
+        data-lyric-file="audio/岸边客 (心碎版0.9x)-夏子航（2603）.lrc"
+        data-autoplay="false"
+        data-position="static"
+        data-theme="auto"
+        data-size="normal"
+        data-embed="true"
+        data-cover-mode="true">
+    </div>
+
+
+    <!-- 引用修改后的 JS 文件 -->
+    <script src="music.js?v=2.1.0"></script>
+
+</body>
+</html>

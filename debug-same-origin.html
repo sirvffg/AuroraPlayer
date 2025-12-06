@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>同域名访问测试</title>
+    <link rel="stylesheet" href="music.css">
+</head>
+<body>
+    <h1>同域名访问测试</h1>
+    <p>此页面用于测试同域名访问时的自动播放功能</p>
+    
+    <div 
+        class="netease-mini-player"
+        data-autoplay="true"
+        data-music-file="audio/test.mp3"
+        data-lyric-file="audio/test.lrc"
+        data-position="bottom-right"
+    ></div>
+    
+    <script src="music.js"></script>
+    
+    <script>
+        // 初始化所有播放器
+        document.addEventListener('DOMContentLoaded', () => {
+            const players = document.querySelectorAll('.netease-mini-player');
+            players.forEach(player => {
+                new NeteaseMiniPlayer(player);
+            });
+        });
+    </script>
+</body>
+</html>

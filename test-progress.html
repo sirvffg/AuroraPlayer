@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>进度条测试</title>
+    <style>
+        body { 
+            background: #fafafa; 
+            font-family: Arial; 
+            padding: 20px;
+        }
+        
+        .test-info {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .debug-info {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+    <link rel="stylesheet" href="music.css">
+</head>
+<body>
+    <div class="test-info">
+        <h3>进度条功能测试</h3>
+        <p>1. 播放音频，观察进度条是否正常更新</p>
+        <p>2. 点击进度条，观察是否跳转到对应位置</p>
+        <p>3. 拖拽进度条，观察是否正常工作</p>
+        <div id="debugInfo" class="debug-info"></div>
+    </div>
+
+    <!-- 简化的测试播放器 -->
+    <div class="netease-mini-player"
+        data-music-file="audio/岸边客 (心碎版0.9x)-夏子航（2603）.mp3"
+        data-lyric-file="audio/岸边客 (心碎版0.9x)-夏子航（2603）.lrc"
+        data-autoplay="false"
+        data-position="static"
+        data-theme="auto"
+        data-size="normal">
+    </div>
+
+    <script src="music.js"></script>
+    
+    <script>
+        // 添加调试信息
+        setTimeout(() => {
+            const player = document.querySelector('.netease-mini-player');
+            if (player && player.neteasePlayer) {
+                const p = player.neteasePlayer;
+                const debugDiv = document.getElementById('debugInfo');
+                
+                function updateDebugInfo() {
+                    debugDiv.innerHTML = `
+                        播放器状态: ${p.isPlaying ? '播放中' : '暂停'}<br>
+                        当前时间: ${p.currentTime.toFixed(2)}s<br>
+                        总时长: ${p.duration.toFixed(2)}s<br>
+                        进度: ${p.duration > 0 ? ((p.currentTime / p.duration) * 100).toFixed(1) : 0}%<br>
+                        音频元素: ${p.audio ? '已加载' : '未加载'}<br>
+                        进度条元素: ${p.elements.progressBar ? '已找到' : '未找到'}<br>
+                        进度条容器: ${p.elements.progressContainer ? '已找到' : '未找到'}<br>
+                        音频源: ${p.audio.src ? p.audio.src.substring(0, 50) + '...' : '无'}<br>
+                        音频状态: ${p.audio.readyState}/4 (readyState)<br>
+                        音频网络状态: ${p.audio.networkState}
+                    `;
+                }
+                
+                // 初始更新
+                updateDebugInfo();
+                
+                // 每秒更新调试信息
+                setInterval(updateDebugInfo, 1000);
+                
+                // 监听音频事件
+                p.audio.addEventListener('loadedmetadata', () => {
+                    console.log('音频元数据已加载');
+                    updateDebugInfo();
+                });
+                
+                p.audio.addEventListener('timeupdate', () => {
+                    // 每秒更新一次调试信息就够了
+                });
+                
+                p.audio.addEventListener('canplay', () => {
+                    console.log('音频可以播放');
+                    updateDebugInfo();
+                });
+                
+                p.audio.addEventListener('error', (e) => {
+                    console.error('音频加载错误:', e);
+                    updateDebugInfo();
+                });
+            } else {
+                document.getElementById('debugInfo').innerHTML = '播放器初始化失败';
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
